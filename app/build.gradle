@@ -1,0 +1,20 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.heitorcampos.linuxnotablet'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.heitorcampos.linuxnotablet'
+        minSdk 24
+        targetSdk 34
+        versionCode 10
+        versionName '2.4'
+    }
+    buildTypes {
+        release { minifyEnabled false; signingConfig signingConfigs.debug }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
