@@ -252,25 +252,21 @@ public class InstallActivity extends Activity {
         step(11, "LibreOffice em português (opcional)",
                 "Pacote de escritório completo: Writer (textos), Calc (planilhas) e Impress (apresentações), em pt-BR e com corretor ortográfico. Depois aparece no menu Aplicativos › Escritório. É um download grande.",
                 lo, runBtn(11, inUbuntu(lo, "lnt-office.sh"), "Instalar LibreOffice"));
-        String w11 = """
-                apt update
-                apt install -y git sassc gtk2-engines-murrine gnome-themes-extra libglib2.0-dev-bin fonts-noto-core
-                cd /tmp && rm -rf Fluent-gtk-theme Win11-icon-theme
-                git clone --depth 1 https://github.com/vinceliuice/Fluent-gtk-theme.git && bash Fluent-gtk-theme/install.sh
-                git clone --depth 1 https://github.com/yeyushengfan258/Win11-icon-theme.git && bash Win11-icon-theme/install.sh
-                # aplica na proxima vez que o XFCE abrir (e se apaga depois)
-                mkdir -p /root/.config/autostart
-                cat > /root/.config/autostart/lnt-tema.desktop <<'TEMA'
-                [Desktop Entry]
-                Type=Application
-                Name=Aplicar tema Windows 11
-                Exec=sh -c "sleep 4; xfconf-query -c xsettings -p /Net/ThemeName -s Fluent-Dark; xfconf-query -c xsettings -p /Net/IconThemeName -s Win11-dark; xfconf-query -c xfwm4 -p /general/theme -s Fluent-Dark; xfconf-query -c xsettings -p /Gtk/FontName -s 'Noto Sans 10'; rm -f /root/.config/autostart/lnt-tema.desktop"
-                TEMA
-                echo "Tema instalado. Abra o Ubuntu: ele e aplicado sozinho."
-                """.strip();
-        step(12, "Tema Windows 11 (opcional)",
-                "Instala o tema Fluent (janelas e botões no estilo do Windows 11, escuro) e os ícones Win11, e aplica sozinho na próxima vez que o Ubuntu abrir. Para trocar depois: Configurações › Aparência (estilo e ícones) e Gerenciador de janelas (bordas).",
-                w11, runBtn(12, inUbuntu(w11, "lnt-tema.sh"), "Tema Windows 11"));
+        String visUrl = "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh";
+        String vis = "command -v curl >/dev/null || (apt update && apt install -y curl)\ncurl -fsSL " + visUrl + " | bash";
+        step(12, "Visual Windows 11 (igual ao tablet)",
+                "Deixa o XFCE igual ao do tablet: tema Fluent arredondado escuro, ícones Win11, fonte Noto Sans, botões das janelas à direita e a barra embaixo com menu Iniciar, janelas abertas, bandeja e relógio. Baixa os temas dos projetos originais no GitHub e guarda o visual anterior antes de trocar. O botão fecha o Ubuntu sozinho antes de aplicar (com ele aberto, o XFCE gravaria o visual antigo por cima).",
+                vis, new Object[][]{{"Fechar o Ubuntu e aplicar", (Runnable) () -> {
+                    if (!installed(Termux.PKG) || !permOk()) {
+                        Toast.makeText(this, "Faça a etapa 3 primeiro (liberar o Termux para este app).", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                    progress(12, "Fechando o Ubuntu…", false);
+                    Termux.run(this, "encerrar.sh", distro(), 45000, r -> {
+                        progress(12, r.ok() ? "Ubuntu fechado. Acompanhe no Termux." : "Não consegui fechar o Ubuntu: feche pelo botão Encerrar e tente de novo.", !r.ok());
+                        if (r.ok()) Termux.runVisible(this, inUbuntu(vis, "lnt-visual.sh"), "Visual Windows 11");
+                    });
+                }}});
         String dl = """
                 # liga a pasta Downloads do Ubuntu na pasta Download do Android (e cria o atalho Tablet)
                 if [ ! -d /sdcard/Download ]; then echo "Sem acesso ao armazenamento do Android. Feche e abra o Ubuntu e rode de novo."; exit 1; fi
@@ -484,7 +480,7 @@ public class InstallActivity extends Activity {
             boolean of = "1".equals(m.get("OFFICE"));
             mark(11, of ? 1 : 3, of ? "instalado" : "opcional");
             boolean tm = "1".equals(m.get("TEMA"));
-            mark(12, tm ? 1 : 3, tm ? "instalado" : "opcional");
+            mark(12, tm ? 1 : 3, tm ? "aplicado" : "opcional");
             boolean dk = "1".equals(m.get("DOWNLOADS"));
             mark(13, dk ? 1 : 3, dk ? "ligada ao tablet" : "opcional");
             mark(14, 3, "quando quiser");

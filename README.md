@@ -16,14 +16,14 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/vers%C3%A3o-2.4-E95420" alt="versão 2.4">
+  <img src="https://img.shields.io/badge/vers%C3%A3o-2.5-E95420" alt="versão 2.5">
   <img src="https://img.shields.io/badge/Android-7%2B-3DDC84?logo=android&logoColor=white" alt="Android 7+">
   <img src="https://img.shields.io/badge/idioma-pt--BR-009C3B" alt="pt-BR">
 </p>
 
 ---
 
-<p align="center"><sub>Versão 2.4 · 52 KB · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
+<p align="center"><sub>Versão 2.5 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
 ## O que é
 
@@ -57,7 +57,7 @@ A tela **Instalação** leva do zero ao Ubuntu funcionando, e cada etapa ganha �
 | 8 | Ubuntu (`jammy:xfce4`) | `udroid install jammy:xfce4` |
 | 9 | Ubuntu em português completo | idioma pt-BR + traduções dos programas |
 
-Extras: **ArtCraft** (todos os apps + launcher), **LibreOffice** em pt-BR, **tema Windows 11** (Fluent + ícones Win11),
+Extras: **ArtCraft** (todos os apps + launcher), **LibreOffice** em pt-BR, **visual Windows 11 igual ao do tablet** (Fluent arredondado + ícones Win11 + barra com menu Iniciar),
 **pasta Downloads do tablet** dentro do Ubuntu, **rotina de atualização** e **limpeza de espaço**.
 
 Todas as etapas com comando têm **Copiar** e **Rodar no Termux** (abre uma aba do Termux para você acompanhar).
@@ -96,12 +96,32 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
   quebra o comando nos espaços.
 - Estado e histórico ficam em `~/.linux-no-tablet/` no Termux.
 
+## Novidades da 2.5
+
+- Extra **Visual Windows 11 (igual ao tablet)**: fecha o Ubuntu sozinho e aplica tema, ícones, fonte, janelas e barra
+
 ## Novidades da 2.4
 
 - Nova etapa **Processos filhos (modo desenvolvedor)** com atalhos para *Sobre o tablet*, *Opções do desenvolvedor* e bateria do Termux
 - Layout para **celular na vertical** (botões quebram linha, cabeçalho e cartões compactos)
 - Pasta Downloads do tablet, tema Windows 11, ArtCraft e LibreOffice nos extras
 - XFCE em pt-BR ao iniciar e etapa de português completo (corrige programas em inglês)
+
+## Visual Windows 11 (igual ao do tablet)
+
+Tema Fluent-round-Dark, ícones Win11-dark, fonte Noto Sans, botões das janelas à direita e barra embaixo
+(48 px, cantos arredondados) com menu Iniciar (Whisker), janelas abertas, bandeja e relógio.
+As configurações ficam em [`visual/`](visual) e os temas são baixados dos projetos originais.
+
+No app: **Instalação › Visual Windows 11 › Fechar o Ubuntu e aplicar**. Ou à mão, com o Ubuntu fechado, no Termux:
+
+```sh
+udroid login jammy:xfce4
+apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh | bash
+exit
+```
+
+O visual anterior fica guardado em `/root/.config/xfce4-antes-DATA`.
 
 ## Copiar o visual de um aparelho para outro
 
