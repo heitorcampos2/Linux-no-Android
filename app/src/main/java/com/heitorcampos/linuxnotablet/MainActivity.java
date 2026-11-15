@@ -49,7 +49,7 @@ public class MainActivity extends Activity {
     LinearLayout steps, help;
     TextView status, log;
     Button startBtn, stopBtn, histBtn, instBtn;
-    LinearLayout btns, root;
+    LinearLayout btns, root, update;
     EditText distroField;
     final Map<String, TextView[]> rows = new HashMap<>();
     boolean busy, waitingPerm, semTraducao;
@@ -61,11 +61,38 @@ public class MainActivity extends Activity {
         getWindow().setStatusBarColor(BG);
         getWindow().setNavigationBarColor(BG);
         buildUi();
+        if (b == null) ui.postDelayed(this::checkUpdate, 1500);
         if (b == null && (!installed(Termux.PKG) || !installed(Termux.X11_PKG))) {
             status.setText("Primeiro, vamos instalar o Linux no Android.");
             ui.postDelayed(this::openInstall, 300);
         } else if (b == null && (prefs.getBoolean("auto", true) || getIntent().getBooleanExtra("start", false)))
             ui.postDelayed(this::start, 400);
+    }
+
+    /** Confere o GitHub e, se tiver versão nova, mostra o aviso com as novidades e o botão de atualizar. */
+    void checkUpdate() {
+        Updater.check(this, (n, err) -> {
+            if (n == null || isFinishing()) return;
+            update.removeAllViews();
+            update.addView(text("⬆  Nova versão " + n.version + " disponível", 18, ORANGE, true));
+            if (!n.notes.isEmpty()) {
+                TextView nt = text(n.notes, 14, TEXT, false);
+                nt.setPadding(0, dp(6), 0, 0);
+                update.addView(nt);
+            }
+            TextView prog = text("", 14, TEXT2, false);
+            FlowLayout row = new FlowLayout(this, dp(10));
+            row.setPadding(0, dp(10), 0, 0);
+            row.addView(button("Atualizar agora", ORANGE, Color.WHITE, v -> {
+                if (!Updater.install(this, n, (msg, done, e) -> { prog.setTextColor(e ? RED : TEXT); prog.setText(msg); }))
+                    prog.setText("Libere \"Instalar apps desconhecidos\" para o Linux no Tablet e toque de novo.");
+            }));
+            row.addView(button("Depois", CARD, TEXT, v -> update.setVisibility(View.GONE)));
+            update.addView(row);
+            prog.setPadding(0, dp(8), 0, 0);
+            update.addView(prog);
+            update.setVisibility(View.VISIBLE);
+        });
     }
 
     void openInstall() { saveDistro(); startActivity(new Intent(this, InstallActivity.class)); }
@@ -129,7 +156,20 @@ public class MainActivity extends Activity {
         titles.addView(text("Linux no Tablet", 26, TEXT, true));
         titles.addView(text("Ubuntu (udroid) + Termux:X11", 15, TEXT2, false));
         head.addView(titles, new LinearLayout.LayoutParams(0, -2, 1));
+        Button about = button("ⓘ Sobre", CARD, TEXT, v -> startActivity(new Intent(this, AboutActivity.class)));
+        about.setTextSize(14);
+        about.setPadding(dp(14), dp(8), dp(14), dp(8));
+        head.addView(about);
         root.addView(head);
+
+        // aviso de versão nova (atualização pelo GitHub)
+        update = new LinearLayout(this);
+        update.setOrientation(LinearLayout.VERTICAL);
+        update.setBackground(round(0xFF2A1A12, 16, ORANGE));
+        update.setPadding(dp(18), dp(14), dp(18), dp(14));
+        update.setVisibility(View.GONE);
+        LinearLayout.LayoutParams upp = lp(-1, -2); upp.topMargin = dp(18);
+        root.addView(update, upp);
 
         status = text("Pronto para iniciar.", 18, TEXT, true);
         status.setPadding(0, dp(22), 0, dp(12));

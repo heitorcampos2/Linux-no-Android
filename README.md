@@ -16,14 +16,14 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/vers%C3%A3o-2.5-E95420" alt="versão 2.5">
+  <img src="https://img.shields.io/badge/vers%C3%A3o-2.6-E95420" alt="versão 2.6">
   <img src="https://img.shields.io/badge/Android-7%2B-3DDC84?logo=android&logoColor=white" alt="Android 7+">
   <img src="https://img.shields.io/badge/idioma-pt--BR-009C3B" alt="pt-BR">
 </p>
 
 ---
 
-<p align="center"><sub>Versão 2.5 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
+<p align="center"><sub>Versão 2.6 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
 ## O que é
 
@@ -96,6 +96,11 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
   quebra o comando nos espaços.
 - Estado e histórico ficam em `~/.linux-no-tablet/` no Termux.
 
+## Novidades da 2.6
+
+- **Atualização automática pelo GitHub**: ao abrir, o app confere o [`version.json`](version.json) e mostra as novidades com o botão **Atualizar agora** (baixa e instala por cima, sem perder nada)
+- Tela **Sobre** (botão ⓘ): versão, autor, verificar atualização e créditos
+
 ## Novidades da 2.5
 
 - Extra **Visual Windows 11 (igual ao tablet)**: fecha o Ubuntu sozinho e aplica tema, ícones, fonte, janelas e barra
@@ -154,6 +159,14 @@ gradle assembleDebug
 ```
 
 O APK sai em `app/build/outputs/apk/debug/`. Sem dependências externas (só o framework Android).
+
+## Atualizações (para quem publica)
+
+1. Aumente `versionCode` e `versionName` em `app/build.gradle` e compile.
+2. Troque o `download/LinuxNoTablet.apk`.
+3. Atualize o [`version.json`](version.json) (`version`, `code` igual ao `versionCode`, `data` e `notas`).
+
+Os apps instalados veem o `code` maior e oferecem a atualização.
 
 ## Créditos
 

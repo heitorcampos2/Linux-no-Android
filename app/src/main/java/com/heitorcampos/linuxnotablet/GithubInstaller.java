@@ -72,9 +72,38 @@ public final class GithubInstaller {
                 JSONObject rel = new JSONObject(b.toString("UTF-8"));
                 JSONObject a = pick(rel.getJSONArray("assets"));
                 if (a == null) throw new Exception("não achei o APK nesse release");
-                String name = a.getString("name");
-                long size = a.optLong("size", -1);
-                HttpURLConnection d = open(a.getString("browser_download_url"));
+                installFrom(c, a.getString("browser_download_url"), a.getString("name"), a.optLong("size", -1), label);
+            } catch (Exception e) {
+                post("Não deu certo: " + e.getMessage(), true, true);
+            }
+        }).start();
+    }
+
+    /** Baixa um APK de um link direto e instala (usado na atualização do próprio app). */
+    public static void startDirect(Context ctx, String apkUrl, String label, Progress p) {
+        current = p;
+        final Context c = ctx.getApplicationContext();
+        new Thread(() -> {
+            try { installFrom(c, apkUrl, label + ".apk", -1, label); }
+            catch (Exception e) { post("Não deu certo: " + e.getMessage(), true, true); }
+        }).start();
+    }
+
+    /** Lê um texto (ex.: version.json) do GitHub. */
+    public static String fetchText(String url) throws Exception {
+        HttpURLConnection h = open(url);
+        h.setRequestProperty("Accept", "*/*");
+        h.setUseCaches(false);
+        if (h.getResponseCode() != 200) throw new Exception("GitHub respondeu " + h.getResponseCode());
+        ByteArrayOutputStream b = new ByteArrayOutputStream();
+        try (InputStream in = h.getInputStream()) { byte[] buf = new byte[8192]; int n; while ((n = in.read(buf)) > 0) b.write(buf, 0, n); }
+        return b.toString("UTF-8");
+    }
+
+    static void installFrom(Context c, String url, String name, long size, String label) throws Exception {
+        {
+            {
+                HttpURLConnection d = open(url);
                 d.setRequestProperty("Accept", "application/octet-stream");
                 if (d.getResponseCode() != 200) throw new Exception("download respondeu " + d.getResponseCode());
                 if (size <= 0) size = d.getContentLengthLong();
@@ -99,10 +128,8 @@ public final class GithubInstaller {
                     PendingIntent pend = PendingIntent.getBroadcast(c, sid, cb, fl);
                     s.commit(pend.getIntentSender());
                 }
-            } catch (Exception e) {
-                post("Não deu certo: " + e.getMessage(), true, true);
             }
-        }).start();
+        }
     }
 
     /** Resposta do instalador do Android. */
