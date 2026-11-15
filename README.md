@@ -16,20 +16,20 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/vers%C3%A3o-2.6-E95420" alt="versão 2.6">
+  <img src="https://img.shields.io/badge/vers%C3%A3o-2.7-E95420" alt="versão 2.7">
   <img src="https://img.shields.io/badge/Android-7%2B-3DDC84?logo=android&logoColor=white" alt="Android 7+">
   <img src="https://img.shields.io/badge/idioma-pt--BR-009C3B" alt="pt-BR">
 </p>
 
 ---
 
-<p align="center"><sub>Versão 2.6 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
+<p align="center"><sub>Versão 2.7 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
 ## O que é
 
 O **Linux no Tablet** é um app que controla o [Termux](https://github.com/termux/termux-app), o
 [Termux:X11](https://github.com/termux/termux-x11) e o [udroid](https://github.com/RandomCoderOrg/fs-manager-udroid)
-para você. Em vez de digitar comandos toda vez, você abre o app e ele:
+para você. Em vez de digitar comandos toda vez, você abre o app, toca em **Iniciar Ubuntu** e ele:
 
 1. **Confere o último encerramento** — se sobrou Termux:X11 rodando, Ubuntu pela metade ou a trava da tela `:0`,
    ele avisa e limpa sozinho;
@@ -95,6 +95,12 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
 - O comando que roda dentro do Ubuntu vai como um script em `/tmp` (compartilhada com o Termux), porque o udroid
   quebra o comando nos espaços.
 - Estado e histórico ficam em `~/.linux-no-tablet/` no Termux.
+
+## Novidades da 2.7
+
+- O Ubuntu só inicia quando você toca em **Iniciar Ubuntu** (o app não abre mais nada sozinho)
+- Visual Windows 11 pelo Termux, entrando no Ubuntu sozinho
+- Novo extra **Copiar o visual de um aparelho para outro** (Exportar / Importar)
 
 ## Novidades da 2.6
 

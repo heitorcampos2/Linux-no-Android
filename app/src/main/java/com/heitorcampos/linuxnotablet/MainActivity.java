@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
         if (b == null && (!installed(Termux.PKG) || !installed(Termux.X11_PKG))) {
             status.setText("Primeiro, vamos instalar o Linux no Android.");
             ui.postDelayed(this::openInstall, 300);
-        } else if (b == null && (prefs.getBoolean("auto", true) || getIntent().getBooleanExtra("start", false)))
+        } else if (b == null && getIntent().getBooleanExtra("start", false))
             ui.postDelayed(this::start, 400);
     }
 
@@ -215,12 +215,7 @@ public class MainActivity extends Activity {
         opts.setPadding(dp(18), dp(12), dp(18), dp(12));
         LinearLayout.LayoutParams op = lp(-1, -2); op.topMargin = dp(16);
         root.addView(opts, op);
-        CheckBox auto = new CheckBox(this);
-        auto.setText("Iniciar sozinho ao abrir o app");
-        auto.setTextColor(TEXT); auto.setTextSize(16);
-        auto.setChecked(prefs.getBoolean("auto", true));
-        auto.setOnCheckedChangeListener((v, on) -> prefs.edit().putBoolean("auto", on).apply());
-        opts.addView(auto);
+        // 2.7: o Ubuntu só inicia quando o usuário toca em Iniciar Ubuntu
         LinearLayout drow = new LinearLayout(this);
         drow.setGravity(Gravity.CENTER_VERTICAL);
         drow.addView(text("Linux do udroid:", 16, TEXT2, false));

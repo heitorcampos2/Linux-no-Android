@@ -1,11 +1,11 @@
 {
-  "version": "2.6",
-  "code": 12,
+  "version": "2.7",
+  "code": 13,
   "data": "15/11/2026",
   "apk": "https://github.com/heitorcampos2/Linux-no-Android/raw/main/download/LinuxNoTablet.apk",
   "notas": [
-    "Atualização automática pelo GitHub: o app avisa quando tem versão nova e instala com um toque",
-    "Nova tela Sobre, com a versão, o botão de verificar atualização e os créditos dos projetos usados",
-    "Extra Visual Windows 11 igual ao do tablet"
+    "O Ubuntu só inicia quando você toca em Iniciar Ubuntu (não abre mais sozinho)",
+    "Visual Windows 11: o comando roda pelo Termux e entra no Ubuntu sozinho",
+    "Novo extra: copiar o visual de um aparelho para outro (Exportar e Importar)"
   ]
 }

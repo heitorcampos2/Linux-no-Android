@@ -253,7 +253,8 @@ public class InstallActivity extends Activity {
                 "Pacote de escritório completo: Writer (textos), Calc (planilhas) e Impress (apresentações), em pt-BR e com corretor ortográfico. Depois aparece no menu Aplicativos › Escritório. É um download grande.",
                 lo, runBtn(11, inUbuntu(lo, "lnt-office.sh"), "Instalar LibreOffice"));
         String visUrl = "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh";
-        String vis = "command -v curl >/dev/null || (apt update && apt install -y curl)\ncurl -fsSL " + visUrl + " | bash";
+        // roda no Termux: o script entra no Ubuntu sozinho
+        String vis = "command -v curl >/dev/null || pkg install -y curl\ncurl -fsSL " + visUrl + " | bash";
         step(12, "Visual Windows 11 (igual ao tablet)",
                 "Deixa o XFCE igual ao do tablet: tema Fluent arredondado escuro, ícones Win11, fonte Noto Sans, botões das janelas à direita e a barra embaixo com menu Iniciar, janelas abertas, bandeja e relógio. Baixa os temas dos projetos originais no GitHub e guarda o visual anterior antes de trocar. O botão fecha o Ubuntu sozinho antes de aplicar (com ele aberto, o XFCE gravaria o visual antigo por cima).",
                 vis, new Object[][]{{"Fechar o Ubuntu e aplicar", (Runnable) () -> {
@@ -264,9 +265,28 @@ public class InstallActivity extends Activity {
                     progress(12, "Fechando o Ubuntu…", false);
                     Termux.run(this, "encerrar.sh", distro(), 45000, r -> {
                         progress(12, r.ok() ? "Ubuntu fechado. Acompanhe no Termux." : "Não consegui fechar o Ubuntu: feche pelo botão Encerrar e tente de novo.", !r.ok());
-                        if (r.ok()) Termux.runVisible(this, inUbuntu(vis, "lnt-visual.sh"), "Visual Windows 11");
+                        if (r.ok()) Termux.runVisible(this, vis, "Visual Windows 11");
                     });
                 }}});
+        String raw = "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/";
+        String exp = "command -v curl >/dev/null || pkg install -y curl\ncurl -fsSL " + raw + "exportar-visual.sh | bash";
+        String imp = "command -v curl >/dev/null || pkg install -y curl\ncurl -fsSL " + raw + "importar-visual.sh | bash";
+        Object[] expBtn = runBtn(13, exp, "Exportar visual")[0];
+        step(13, "Copiar o visual de um aparelho para outro",
+                "Exportar: junta painel, menu Iniciar, tema, ícones, cursor, fontes, papel de parede e atalhos num arquivo visual-ubuntu.tar.gz na pasta Download. Mande esse arquivo para a pasta Download do outro aparelho e lá toque em Importar (o botão fecha o Ubuntu antes, porque com ele aberto o XFCE gravaria o visual antigo por cima).\n\nExportar:\n" + exp.replace("command -v curl >/dev/null || pkg install -y curl\n", "") + "\n\nImportar:",
+                imp, new Object[][]{
+                        {"Exportar", expBtn[1]},
+                        {"Fechar o Ubuntu e importar", (Runnable) () -> {
+                            if (!installed(Termux.PKG) || !permOk()) {
+                                Toast.makeText(this, "Faça a etapa 3 primeiro (liberar o Termux para este app).", Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                            progress(13, "Fechando o Ubuntu…", false);
+                            Termux.run(this, "encerrar.sh", distro(), 45000, r -> {
+                                progress(13, r.ok() ? "Ubuntu fechado. Acompanhe no Termux." : "Não consegui fechar o Ubuntu: feche pelo botão Encerrar e tente de novo.", !r.ok());
+                                if (r.ok()) Termux.runVisible(this, imp, "Importar visual");
+                            });
+                        }}});
         String dl = """
                 # liga a pasta Downloads do Ubuntu na pasta Download do Android (e cria o atalho Tablet)
                 if [ ! -d /sdcard/Download ]; then echo "Sem acesso ao armazenamento do Android. Feche e abra o Ubuntu e rode de novo."; exit 1; fi
@@ -282,23 +302,23 @@ public class InstallActivity extends Activity {
                 echo "Pronto: $D agora e a pasta Download do Android."
                 """.strip();
         String dlRun = "ls /storage/emulated/0 >/dev/null 2>&1 || { echo 'Permita o acesso aos arquivos na janela do Android...'; termux-setup-storage; sleep 6; }\n" + inUbuntu(dl, "lnt-downloads.sh");
-        step(13, "Pasta Downloads do tablet no Ubuntu",
+        step(14, "Pasta Downloads do tablet no Ubuntu",
                 "Faz a pasta Downloads do Ubuntu ser a mesma pasta Download do Android: o que você baixa no Ubuntu aparece no tablet e vice-versa. Também cria o atalho Tablet na Área de Trabalho e na barra lateral do gerenciador de arquivos. Se o Termux ainda não tiver acesso aos arquivos, o Android vai pedir permissão — aceite. Se for a primeira vez, feche e abra o Ubuntu e rode de novo.",
-                dl, runBtn(13, dlRun, "Downloads do tablet"));
+                dl, runBtn(14, dlRun, "Downloads do tablet"));
         String upT = "pkg update -y && pkg upgrade -y";
         String upU = "apt update && apt full-upgrade -y && apt autoremove -y && apt clean";
         String upAll = upT + "\nudroid upgrade || true\n" + inUbuntu(upU, "lnt-update.sh");
-        step(14, "Rotina de atualização (de vez em quando)",
+        step(15, "Rotina de atualização (de vez em quando)",
                 "Atualiza tudo: os pacotes do Termux, os scripts do udroid e o Ubuntu, e no fim apaga o que não serve mais para liberar espaço. Uma vez por mês está ótimo. Feche o Ubuntu antes (Encerrar).\n\nTermux:  " + upT + "\nudroid:  udroid upgrade\nUbuntu (dentro dele):  " + upU,
-                upAll, runBtn(14, upAll, "Atualizar tudo"));
+                upAll, runBtn(15, upAll, "Atualizar tudo"));
         String disk = "echo '== Espaco livre =='; df -h $HOME | tail -n 1\necho '== Tamanho do Ubuntu =='; du -sh $PREFIX/var/lib/udroid/installed-filesystems/* 2>/dev/null\n" + inUbuntu("apt clean && echo Cache do apt limpo", "lnt-limpar.sh");
-        step(15, "Ver espaço e limpar cache",
+        step(16, "Ver espaço e limpar cache",
                 "Mostra quanto espaço sobra no tablet e quanto o Ubuntu ocupa, e limpa os pacotes baixados que já foram instalados.",
-                disk, runBtn(15, disk, "Espaço e limpeza"));
+                disk, runBtn(16, disk, "Espaço e limpeza"));
 
         // final
-        step(16, "Pronto! Abrir com o Linux no Tablet",
-                "A partir de agora é só abrir este app: ele confere o último encerramento, limpa restos, sobe o Termux:X11, inicia o Ubuntu e abre a tela. Para sair, use Sair no menu do XFCE ou o botão Encerrar.",
+        step(17, "Pronto! Abrir com o Linux no Tablet",
+                "A partir de agora é só abrir este app e tocar em Iniciar Ubuntu: ele confere o último encerramento, limpa restos, sobe o Termux:X11, inicia o Ubuntu e abre a tela. Para sair, use Sair no menu do XFCE ou o botão Encerrar.",
                 null, new Object[][]{{"▶  Iniciar Ubuntu", (Runnable) () -> {
                     startActivity(new Intent(this, MainActivity.class).putExtra("start", true)
                             .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
@@ -447,8 +467,8 @@ public class InstallActivity extends Activity {
         markDev(null);
         if (!tx || !permOk()) {
             mark(3, tx && !permOk() ? 2 : 0, tx ? "falta a permissão" : "a fazer");
-            for (int i = 5; i <= 15; i++) mark(i, 3, "");
-            mark(16, 0, "");
+            for (int i = 5; i <= 16; i++) mark(i, 3, "");
+            mark(17, 0, "");
             summary.setText(!tx ? "Comece pela etapa 1." : "Faça a etapa 3 para o app conferir o resto sozinho.");
             return;
         }
@@ -456,7 +476,7 @@ public class InstallActivity extends Activity {
         Termux.run(this, "verificar_instalacao.sh", distro(), 15000, r -> {
             if (r.timeout || r.out.isEmpty()) {
                 mark(3, 2, "o Termux não respondeu");
-                for (int i = 5; i <= 15; i++) mark(i, 3, "");
+                for (int i = 5; i <= 16; i++) mark(i, 3, "");
                 summary.setText("Abra o Termux, cole o comando da etapa 3 e toque em Conferir.");
                 return;
             }
@@ -482,11 +502,12 @@ public class InstallActivity extends Activity {
             boolean tm = "1".equals(m.get("TEMA"));
             mark(12, tm ? 1 : 3, tm ? "aplicado" : "opcional");
             boolean dk = "1".equals(m.get("DOWNLOADS"));
-            mark(13, dk ? 1 : 3, dk ? "ligada ao tablet" : "opcional");
-            mark(14, 3, "quando quiser");
+            mark(14, dk ? 1 : 3, dk ? "ligada ao tablet" : "opcional");
+            mark(13, 3, "quando quiser");
             mark(15, 3, "quando quiser");
+            mark(16, 3, "quando quiser");
             boolean all = x11 && pk && ud && ds;
-            mark(16, all ? 1 : 0, all ? "tudo pronto" : "");
+            mark(17, all ? 1 : 0, all ? "tudo pronto" : "");
             summary.setText(all ? (pt ? "Tudo pronto! Toque em Iniciar Ubuntu na última etapa." : "Tudo pronto. Falta só o português (etapa 9, opcional).")
                     : "Siga as etapas que ainda não têm ✔.");
         });
