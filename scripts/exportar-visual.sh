@@ -4,6 +4,13 @@
 # Uso (dentro do Ubuntu, como root):
 #   curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/exportar-visual.sh | bash
 set -u
+# Rodou no Termux (fora do Ubuntu)? Entra no Ubuntu sozinho e roda la dentro.
+if [ "${PREFIX:-}" = "/data/data/com.termux/files/usr" ]; then
+  D="${DISTRO:-jammy:xfce4}"
+  echo "Voce esta no Termux: entrando no Ubuntu ($D) para rodar..."
+  curl -fsSL "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/exportar-visual.sh" -o "$PREFIX/tmp/lna-exportar-visual.sh" || { echo "Sem internet?"; exit 1; }
+  exec udroid login "$D" /bin/bash /tmp/lna-exportar-visual.sh
+fi
 O=/sdcard/Download/visual-ubuntu.tar.gz
 L=/tmp/lnt-lista
 : > "$L"

@@ -3,6 +3,13 @@
 # Rode com o Ubuntu FECHADO (no app: Encerrar), entrando pelo Termux com: udroid login jammy:xfce4
 #   curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/importar-visual.sh | bash
 set -u
+# Rodou no Termux (fora do Ubuntu)? Entra no Ubuntu sozinho e roda la dentro.
+if [ "${PREFIX:-}" = "/data/data/com.termux/files/usr" ]; then
+  D="${DISTRO:-jammy:xfce4}"
+  echo "Voce esta no Termux: entrando no Ubuntu ($D) para rodar..."
+  curl -fsSL "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/importar-visual.sh" -o "$PREFIX/tmp/lna-importar-visual.sh" || { echo "Sem internet?"; exit 1; }
+  exec udroid login "$D" /bin/bash /tmp/lna-importar-visual.sh
+fi
 F=/sdcard/Download/visual-ubuntu.tar.gz
 [ -f "$F" ] || F=/sdcard/Download/visual-ubuntu-tablet.tar.gz
 if [ ! -f "$F" ]; then echo "Nao achei /sdcard/Download/visual-ubuntu.tar.gz - copie o arquivo para a pasta Download."; exit 1; fi

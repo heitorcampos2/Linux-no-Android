@@ -5,6 +5,13 @@
 # Rode com o Ubuntu FECHADO, pelo Termux:  udroid login jammy:xfce4
 #   curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh | bash
 set -u
+# Rodou no Termux (fora do Ubuntu)? Entra no Ubuntu sozinho e roda la dentro.
+if [ "${PREFIX:-}" = "/data/data/com.termux/files/usr" ]; then
+  D="${DISTRO:-jammy:xfce4}"
+  echo "Voce esta no Termux: entrando no Ubuntu ($D) para rodar..."
+  curl -fsSL "https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh" -o "$PREFIX/tmp/lna-instalar-visual-tablet.sh" || { echo "Sem internet?"; exit 1; }
+  exec udroid login "$D" /bin/bash /tmp/lna-instalar-visual-tablet.sh
+fi
 if pgrep -x xfce4-session >/dev/null; then
   echo "O Ubuntu (XFCE) esta aberto. Feche pelo app (Encerrar) e rode de novo pelo Termux com: udroid login jammy:xfce4"
   exit 1

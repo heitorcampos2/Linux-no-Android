@@ -118,12 +118,11 @@ Tema Fluent-round-Dark, ícones Win11-dark, fonte Noto Sans, botões das janelas
 (48 px, cantos arredondados) com menu Iniciar (Whisker), janelas abertas, bandeja e relógio.
 As configurações ficam em [`visual/`](visual) e os temas são baixados dos projetos originais.
 
-No app: **Instalação › Visual Windows 11 › Fechar o Ubuntu e aplicar**. Ou à mão, com o Ubuntu fechado, no Termux:
+No app: **Instalação › Visual Windows 11 › Fechar o Ubuntu e aplicar**. Ou à mão, com o Ubuntu fechado, no **Termux**
+(o script entra no Ubuntu sozinho):
 
 ```sh
-udroid login jammy:xfce4
-apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh | bash
-exit
+curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/instalar-visual-tablet.sh | bash
 ```
 
 O visual anterior fica guardado em `/root/.config/xfce4-antes-DATA`.
@@ -132,7 +131,7 @@ O visual anterior fica guardado em `/root/.config/xfce4-antes-DATA`.
 
 Deixe o celular igual ao tablet (painel, menu Iniciar, tema, ícones, cursor, fontes, papel de parede e atalhos).
 
-**No aparelho de origem**, no terminal do Ubuntu:
+**No aparelho de origem**, no Termux ou no terminal do Ubuntu:
 
 ```sh
 apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/exportar-visual.sh | bash
@@ -143,9 +142,7 @@ Isso cria `visual-ubuntu.tar.gz` na pasta **Download**. Mande o arquivo para a p
 **No outro aparelho**, com o Ubuntu fechado (botão **Encerrar** do app), no Termux:
 
 ```sh
-udroid login jammy:xfce4
-apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/importar-visual.sh | bash
-exit
+curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/importar-visual.sh | bash
 ```
 
 Depois é só abrir o Ubuntu pelo app.
