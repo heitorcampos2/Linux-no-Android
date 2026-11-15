@@ -103,6 +103,28 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
 - Pasta Downloads do tablet, tema Windows 11, ArtCraft e LibreOffice nos extras
 - XFCE em pt-BR ao iniciar e etapa de português completo (corrige programas em inglês)
 
+## Copiar o visual de um aparelho para outro
+
+Deixe o celular igual ao tablet (painel, menu Iniciar, tema, ícones, cursor, fontes, papel de parede e atalhos).
+
+**No aparelho de origem**, no terminal do Ubuntu:
+
+```sh
+apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/exportar-visual.sh | bash
+```
+
+Isso cria `visual-ubuntu.tar.gz` na pasta **Download**. Mande o arquivo para a pasta Download do outro aparelho.
+
+**No outro aparelho**, com o Ubuntu fechado (botão **Encerrar** do app), no Termux:
+
+```sh
+udroid login jammy:xfce4
+apt install -y curl; curl -fsSL https://raw.githubusercontent.com/heitorcampos2/Linux-no-Android/main/scripts/importar-visual.sh | bash
+exit
+```
+
+Depois é só abrir o Ubuntu pelo app.
+
 ## Compilar
 
 Android Studio, ou Gradle 8.7 com JDK 17:
