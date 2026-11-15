@@ -10,18 +10,20 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/heitorcampos2/Linux-no-Android/releases/latest/download/LinuxNoTablet.apk">
+  <a href="https://github.com/heitorcampos2/Linux-no-Android/raw/main/download/LinuxNoTablet.apk">
     <img src="https://img.shields.io/badge/BAIXAR%20APK-Linux%20no%20Tablet-E95420?style=for-the-badge&logo=android&logoColor=white" alt="Baixar APK" height="48">
   </a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/heitorcampos2/Linux-no-Android/releases/latest"><img src="https://img.shields.io/github/v/release/heitorcampos2/Linux-no-Android?label=vers%C3%A3o&color=E95420" alt="versão"></a>
+  <img src="https://img.shields.io/badge/vers%C3%A3o-2.4-E95420" alt="versão 2.4">
   <img src="https://img.shields.io/badge/Android-7%2B-3DDC84?logo=android&logoColor=white" alt="Android 7+">
   <img src="https://img.shields.io/badge/idioma-pt--BR-009C3B" alt="pt-BR">
 </p>
 
 ---
+
+<p align="center"><sub>Versão 2.4 · 52 KB · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
 ## O que é
 
@@ -93,6 +95,13 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
 - O comando que roda dentro do Ubuntu vai como um script em `/tmp` (compartilhada com o Termux), porque o udroid
   quebra o comando nos espaços.
 - Estado e histórico ficam em `~/.linux-no-tablet/` no Termux.
+
+## Novidades da 2.4
+
+- Nova etapa **Processos filhos (modo desenvolvedor)** com atalhos para *Sobre o tablet*, *Opções do desenvolvedor* e bateria do Termux
+- Layout para **celular na vertical** (botões quebram linha, cabeçalho e cartões compactos)
+- Pasta Downloads do tablet, tema Windows 11, ArtCraft e LibreOffice nos extras
+- XFCE em pt-BR ao iniciar e etapa de português completo (corrige programas em inglês)
 
 ## Compilar
 
