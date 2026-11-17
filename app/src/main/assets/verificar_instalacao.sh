@@ -15,4 +15,6 @@ S="$d/var/lib/dpkg/status"
 if [ -n "$d" ] && grep -q '^Package: .*craft-launcher$' "$S" 2>/dev/null; then echo "ACLAUNCHER 1"; else echo "ACLAUNCHER 0"; fi
 n=$(grep -cE '^Package: (cad|deck|design|effect|fig|film|grid|light|pdf|photo|sound|vector|word)craft$' "$S" 2>/dev/null); echo "ACAPPS ${n:-0}"
 if [ -n "$d" ] && find "$d/root" -maxdepth 1 -type l -lname '/sdcard/Download' 2>/dev/null | grep -q .; then echo "DOWNLOADS 1"; else echo "DOWNLOADS 0"; fi
+tz=$(/system/bin/getprop persist.sys.timezone 2>/dev/null)
+if [ -n "$d" ] && [ -n "$tz" ] && [ -f "$d/usr/share/zoneinfo/$tz" ] && [ "$(readlink "$d/etc/localtime" 2>/dev/null)" = "/usr/share/zoneinfo/$tz" ]; then echo "HORA 1"; else echo "HORA 0"; fi
 ph=$(/system/bin/getprop persist.sys.fflag.override.settings_enable_monitor_phantom_procs 2>/dev/null); echo "PHANTOM ${ph:-?}"

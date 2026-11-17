@@ -28,9 +28,25 @@ p=$(cat "$L/x11.pid" 2>/dev/null); [ -n "$p" ] && kill "$p" 2>/dev/null; rm -f "
 rm -f "$T/.X0-lock" "$T/.X11-unix/X0"
 command -v termux-wake-unlock >/dev/null 2>&1 && termux-wake-unlock
 EOS
+# fuso horario do Android (o Ubuntu nao enxerga e ficaria em UTC, com a hora adiantada)
+tz=$(/system/bin/getprop persist.sys.timezone 2>/dev/null)
+printf '%s %s\n' "${tz:--}" "$(date +%z)" > "$T/lnt-tz"
 # scripts que rodam DENTRO do Ubuntu (a /tmp do Ubuntu e a $PREFIX/tmp do Termux)
 cat > "$T/lnt-xfce.sh" <<'EOX'
 export DISPLAY=:0 PULSE_SERVER=127.0.0.1
+# hora certa: usa o mesmo fuso do Android
+if read -r tz off < /tmp/lnt-tz 2>/dev/null; then
+  if [ "$tz" != "-" ] && [ -f "/usr/share/zoneinfo/$tz" ]; then
+    export TZ="$tz"
+    [ "$(readlink /etc/localtime 2>/dev/null)" = "/usr/share/zoneinfo/$tz" ] || ln -sf "/usr/share/zoneinfo/$tz" /etc/localtime
+    [ "$(cat /etc/timezone 2>/dev/null)" = "$tz" ] || echo "$tz" > /etc/timezone
+  elif [ -n "$off" ]; then
+    # sem o pacote tzdata: monta o fuso pela diferenca de horas (ex.: -0300 vira <-03>3)
+    h=$((10#${off:1:2})); m=${off:3:2}; [ "${off:0:1}" = "-" ] && s="" || s="-"
+    export TZ="<${off:0:3}>$s$h:$m"
+  fi
+  echo "fuso da sessao: $TZ"
+fi
 # portugues do Brasil sempre que existir no Ubuntu: gera o idioma se faltar e deixa como padrao
 temptbr() { locale -a 2>/dev/null | grep -qiE '^pt_BR\.utf-?8$'; }
 if ! temptbr && [ -f /usr/share/i18n/locales/pt_BR ] && command -v locale-gen >/dev/null 2>&1; then

@@ -305,19 +305,28 @@ public class InstallActivity extends Activity {
         step(14, "Pasta Downloads do tablet no Ubuntu",
                 "Faz a pasta Downloads do Ubuntu ser a mesma pasta Download do Android: o que você baixa no Ubuntu aparece no tablet e vice-versa. Também cria o atalho Tablet na Área de Trabalho e na barra lateral do gerenciador de arquivos. Se o Termux ainda não tiver acesso aos arquivos, o Android vai pedir permissão — aceite. Se for a primeira vez, feche e abra o Ubuntu e rode de novo.",
                 dl, runBtn(14, dlRun, "Downloads do tablet"));
+        String tzId = java.util.TimeZone.getDefault().getID();
+        String hora = "# deixa o Ubuntu no mesmo fuso do Android (" + tzId + ")\n"
+                + "[ -f /usr/share/zoneinfo/" + tzId + " ] || { apt update && DEBIAN_FRONTEND=noninteractive apt install -y tzdata; }\n"
+                + "ln -sf /usr/share/zoneinfo/" + tzId + " /etc/localtime && echo " + tzId + " > /etc/timezone\n"
+                + "echo \"Hora no Ubuntu agora: $(date '+%d/%m/%Y %H:%M')\"\n"
+                + "echo 'Pronto: feche e abra o Ubuntu para o relogio da barra atualizar.'";
+        step(15, "Hora e data certas",
+                "O Ubuntu não enxerga o fuso do Android e fica no horário UTC (3 horas adiantado no Brasil). A partir da versão 2.8, o app passa o fuso do aparelho ao Ubuntu toda vez que você toca em Iniciar. Este passo deixa o fuso gravado de vez no Ubuntu (instala o pacote tzdata se faltar), para valer também quando você entra pelo Termux. Fuso deste aparelho: " + tzId + ".",
+                hora, runBtn(15, inUbuntu(hora, "lnt-hora.sh"), "Hora e data certas"));
         String upT = "pkg update -y && pkg upgrade -y";
         String upU = "apt update && apt full-upgrade -y && apt autoremove -y && apt clean";
         String upAll = upT + "\nudroid upgrade || true\n" + inUbuntu(upU, "lnt-update.sh");
-        step(15, "Rotina de atualização (de vez em quando)",
+        step(16, "Rotina de atualização (de vez em quando)",
                 "Atualiza tudo: os pacotes do Termux, os scripts do udroid e o Ubuntu, e no fim apaga o que não serve mais para liberar espaço. Uma vez por mês está ótimo. Feche o Ubuntu antes (Encerrar).\n\nTermux:  " + upT + "\nudroid:  udroid upgrade\nUbuntu (dentro dele):  " + upU,
-                upAll, runBtn(15, upAll, "Atualizar tudo"));
+                upAll, runBtn(16, upAll, "Atualizar tudo"));
         String disk = "echo '== Espaco livre =='; df -h $HOME | tail -n 1\necho '== Tamanho do Ubuntu =='; du -sh $PREFIX/var/lib/udroid/installed-filesystems/* 2>/dev/null\n" + inUbuntu("apt clean && echo Cache do apt limpo", "lnt-limpar.sh");
-        step(16, "Ver espaço e limpar cache",
+        step(17, "Ver espaço e limpar cache",
                 "Mostra quanto espaço sobra no tablet e quanto o Ubuntu ocupa, e limpa os pacotes baixados que já foram instalados.",
-                disk, runBtn(16, disk, "Espaço e limpeza"));
+                disk, runBtn(17, disk, "Espaço e limpeza"));
 
         // final
-        step(17, "Pronto! Abrir com o Linux no Tablet",
+        step(18, "Pronto! Abrir com o Linux no Tablet",
                 "A partir de agora é só abrir este app e tocar em Iniciar Ubuntu: ele confere o último encerramento, limpa restos, sobe o Termux:X11, inicia o Ubuntu e abre a tela. Para sair, use Sair no menu do XFCE ou o botão Encerrar.",
                 null, new Object[][]{{"▶  Iniciar Ubuntu", (Runnable) () -> {
                     startActivity(new Intent(this, MainActivity.class).putExtra("start", true)
@@ -467,8 +476,8 @@ public class InstallActivity extends Activity {
         markDev(null);
         if (!tx || !permOk()) {
             mark(3, tx && !permOk() ? 2 : 0, tx ? "falta a permissão" : "a fazer");
-            for (int i = 5; i <= 16; i++) mark(i, 3, "");
-            mark(17, 0, "");
+            for (int i = 5; i <= 17; i++) mark(i, 3, "");
+            mark(18, 0, "");
             summary.setText(!tx ? "Comece pela etapa 1." : "Faça a etapa 3 para o app conferir o resto sozinho.");
             return;
         }
@@ -476,7 +485,7 @@ public class InstallActivity extends Activity {
         Termux.run(this, "verificar_instalacao.sh", distro(), 15000, r -> {
             if (r.timeout || r.out.isEmpty()) {
                 mark(3, 2, "o Termux não respondeu");
-                for (int i = 5; i <= 16; i++) mark(i, 3, "");
+                for (int i = 5; i <= 17; i++) mark(i, 3, "");
                 summary.setText("Abra o Termux, cole o comando da etapa 3 e toque em Conferir.");
                 return;
             }
@@ -504,10 +513,12 @@ public class InstallActivity extends Activity {
             boolean dk = "1".equals(m.get("DOWNLOADS"));
             mark(14, dk ? 1 : 3, dk ? "ligada ao tablet" : "opcional");
             mark(13, 3, "quando quiser");
-            mark(15, 3, "quando quiser");
+            boolean hr = "1".equals(m.get("HORA"));
+            mark(15, hr ? 1 : 3, hr ? "fuso certo" : "o app acerta ao iniciar");
             mark(16, 3, "quando quiser");
+            mark(17, 3, "quando quiser");
             boolean all = x11 && pk && ud && ds;
-            mark(17, all ? 1 : 0, all ? "tudo pronto" : "");
+            mark(18, all ? 1 : 0, all ? "tudo pronto" : "");
             summary.setText(all ? (pt ? "Tudo pronto! Toque em Iniciar Ubuntu na última etapa." : "Tudo pronto. Falta só o português (etapa 9, opcional).")
                     : "Siga as etapas que ainda não têm ✔.");
         });
