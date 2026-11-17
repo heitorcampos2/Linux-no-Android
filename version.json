@@ -1,11 +1,10 @@
 {
-  "version": "2.7",
-  "code": 13,
-  "data": "15/11/2026",
+  "version": "2.8",
+  "code": 14,
+  "data": "17/11/2026",
   "apk": "https://github.com/heitorcampos2/Linux-no-Android/raw/main/download/LinuxNoTablet.apk",
   "notas": [
-    "O Ubuntu só inicia quando você toca em Iniciar Ubuntu (não abre mais sozinho)",
-    "Visual Windows 11: o comando roda pelo Termux e entra no Ubuntu sozinho",
-    "Novo extra: copiar o visual de um aparelho para outro (Exportar e Importar)"
+    "Hora e data certas: o Ubuntu passa a usar o mesmo fuso do Android (antes ficava em UTC, 3 horas adiantado)",
+    "Novo extra: Hora e data certas, que grava o fuso no Ubuntu de vez"
   ]
 }

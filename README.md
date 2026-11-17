@@ -16,14 +16,14 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/vers%C3%A3o-2.7-E95420" alt="versão 2.7">
+  <img src="https://img.shields.io/badge/vers%C3%A3o-2.8-E95420" alt="versão 2.8">
   <img src="https://img.shields.io/badge/Android-7%2B-3DDC84?logo=android&logoColor=white" alt="Android 7+">
   <img src="https://img.shields.io/badge/idioma-pt--BR-009C3B" alt="pt-BR">
 </p>
 
 ---
 
-<p align="center"><sub>Versão 2.7 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
+<p align="center"><sub>Versão 2.8 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
 ## Capturas de tela
 
@@ -109,6 +109,21 @@ adb shell settings put global settings_enable_monitor_phantom_procs false
 - O comando que roda dentro do Ubuntu vai como um script em `/tmp` (compartilhada com o Termux), porque o udroid
   quebra o comando nos espaços.
 - Estado e histórico ficam em `~/.linux-no-tablet/` no Termux.
+
+## Novidades da 2.8
+
+- **Hora e data certas:** ao tocar em Iniciar, o app passa o fuso do Android para o Ubuntu. Antes o Ubuntu ficava em UTC e o relógio da barra mostrava 3 horas a mais.
+- **Novo extra "Hora e data certas":** grava o fuso no Ubuntu de vez (instala o `tzdata` se faltar), para valer também quando você entra pelo Termux.
+
+Para corrigir à mão, dentro do Ubuntu:
+
+```bash
+apt update && DEBIAN_FRONTEND=noninteractive apt install -y tzdata
+ln -sf /usr/share/zoneinfo/America/Sao_Paulo /etc/localtime && echo America/Sao_Paulo > /etc/timezone
+date
+```
+
+Depois feche e abra o Ubuntu para o relógio da barra atualizar.
 
 ## Novidades da 2.7
 
