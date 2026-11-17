@@ -25,6 +25,20 @@
 
 <p align="center"><sub>Versão 2.7 · Android 7 ou mais novo · <a href="download/LinuxNoTablet.apk">arquivo no repositório</a></sub></p>
 
+## Capturas de tela
+
+<p align="center">
+  <img src="docs/capturas/tablet.jpg" alt="Ubuntu com visual Windows 11 no tablet Android" width="100%">
+  <br><sub>No tablet: Ubuntu com XFCE e visual Windows 11, apps ArtCraft na área de trabalho</sub>
+</p>
+
+<p align="center">
+  <img src="docs/capturas/celular-menu.jpg" alt="Menu iniciar no celular" width="45%">
+  &nbsp;
+  <img src="docs/capturas/celular-apps.jpg" alt="GridCraft, PhotoCraft e arquivos no celular" width="45%">
+  <br><sub>No celular, na vertical: menu iniciar, GridCraft, PhotoCraft e a pasta do Android (sdcard)</sub>
+</p>
+
 ## O que é
 
 O **Linux no Tablet** é um app que controla o [Termux](https://github.com/termux/termux-app), o
